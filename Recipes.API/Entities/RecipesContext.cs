@@ -1,8 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Recipes.API.Entities
 {
@@ -11,17 +7,18 @@ namespace Recipes.API.Entities
         public RecipesContext(DbContextOptions<RecipesContext> options)
            : base(options)
         {
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<Amount> Amounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Recipe>().OwnsMany(p => p.Ingredients);
+            modelBuilder.Entity<Ingredient>().OwnsOne(p => p.Amount);
+
             modelBuilder.Entity<RecipeCategory>()
                 .HasKey(rc => new { rc.RecipeId, rc.CategoryId });
             modelBuilder.Entity<RecipeCategory>()
@@ -32,7 +29,6 @@ namespace Recipes.API.Entities
                 .HasOne(rc => rc.Category)
                 .WithMany(c => c.RecipeCategories)
                 .HasForeignKey(rc => rc.CategoryId);
-
         }
     }
 }
