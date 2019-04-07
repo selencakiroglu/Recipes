@@ -9,9 +9,9 @@ namespace Recipes.API.Controllers
 {
     public class DummyController : ControllerBase
     {
-        private RecipesContext _ctx;
+        private RecipeContext _ctx;
 
-        public DummyController(RecipesContext ctx)
+        public DummyController(RecipeContext ctx)
         {
             _ctx = ctx;
         }

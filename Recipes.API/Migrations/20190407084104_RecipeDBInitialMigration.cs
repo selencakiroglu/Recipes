@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recipes.API.Migrations
 {
-    public partial class RecipesDBInitialMigration : Migration
+    public partial class RecipeDBInitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,7 +25,7 @@ namespace Recipes.API.Migrations
                 {
                     RecipeId = table.Column<Guid>(nullable: false),
                     Title = table.Column<string>(maxLength: 50, nullable: false),
-                    Directions = table.Column<string>(maxLength: 1000, nullable: false)
+                    Directions_Step = table.Column<string>(maxLength: 1000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,24 +33,24 @@ namespace Recipes.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ingredient",
+                name: "Ingredients",
                 columns: table => new
                 {
                     IngredientId = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Amount_Quantity = table.Column<string>(nullable: true),
                     Amount_Unit = table.Column<string>(nullable: true),
-                    RecipeId = table.Column<Guid>(nullable: true)
+                    RecipeId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ingredient", x => x.IngredientId);
+                    table.PrimaryKey("PK_Ingredients", x => x.IngredientId);
                     table.ForeignKey(
-                        name: "FK_Ingredient_Recipes_RecipeId",
+                        name: "FK_Ingredients_Recipes_RecipeId",
                         column: x => x.RecipeId,
                         principalTable: "Recipes",
                         principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,15 +79,15 @@ namespace Recipes.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredient_RecipeId",
-                table: "Ingredient",
+                name: "IX_Ingredients_RecipeId",
+                table: "Ingredients",
                 column: "RecipeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Ingredient");
+                name: "Ingredients");
 
             migrationBuilder.DropTable(
                 name: "RecipeCategories");

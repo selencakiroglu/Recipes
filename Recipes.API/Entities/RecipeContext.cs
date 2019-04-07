@@ -2,9 +2,9 @@
 
 namespace Recipes.API.Entities
 {
-    public class RecipesContext : DbContext
+    public class RecipeContext : DbContext
     {
-        public RecipesContext(DbContextOptions<RecipesContext> options)
+        public RecipeContext(DbContextOptions<RecipeContext> options)
            : base(options)
         {
             Database.Migrate();
@@ -12,12 +12,13 @@ namespace Recipes.API.Entities
 
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Recipe>().OwnsMany(p => p.Ingredients);
             modelBuilder.Entity<Ingredient>().OwnsOne(p => p.Amount);
+            modelBuilder.Entity<Recipe>().OwnsOne(p => p.Directions);
 
             modelBuilder.Entity<RecipeCategory>()
                 .HasKey(rc => new { rc.RecipeId, rc.CategoryId });

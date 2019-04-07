@@ -22,7 +22,6 @@ namespace Recipes.API.Entities
             = new List<Ingredient>();
 
         [Required]
-        [MaxLength(1000)]
-        public string Directions { get; set; }
+        public Directions Directions { get; set; }
     }
 }

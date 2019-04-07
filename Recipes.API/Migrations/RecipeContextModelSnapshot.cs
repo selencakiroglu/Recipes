@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Recipes.API.Entities;
 
 namespace Recipes.API.Migrations
 {
-    [DbContext(typeof(RecipesContext))]
-    [Migration("20190406163633_RecipesDBInitialMigration")]
-    partial class RecipesDBInitialMigration
+    [DbContext(typeof(RecipeContext))]
+    partial class RecipeContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,23 +42,19 @@ namespace Recipes.API.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<Guid?>("RecipeId");
+                    b.Property<Guid>("RecipeId");
 
                     b.HasKey("IngredientId");
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("Ingredient");
+                    b.ToTable("Ingredients");
                 });
 
             modelBuilder.Entity("Recipes.API.Entities.Recipe", b =>
                 {
                     b.Property<Guid>("RecipeId")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Directions")
-                        .IsRequired()
-                        .HasMaxLength(1000);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -86,9 +80,10 @@ namespace Recipes.API.Migrations
 
             modelBuilder.Entity("Recipes.API.Entities.Ingredient", b =>
                 {
-                    b.HasOne("Recipes.API.Entities.Recipe")
+                    b.HasOne("Recipes.API.Entities.Recipe", "Recipe")
                         .WithMany("Ingredients")
-                        .HasForeignKey("RecipeId");
+                        .HasForeignKey("RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.OwnsOne("Recipes.API.Entities.Amount", "Amount", b1 =>
                         {
@@ -100,11 +95,31 @@ namespace Recipes.API.Migrations
 
                             b1.HasKey("IngredientId");
 
-                            b1.ToTable("Ingredient");
+                            b1.ToTable("Ingredients");
 
                             b1.HasOne("Recipes.API.Entities.Ingredient")
                                 .WithOne("Amount")
                                 .HasForeignKey("Recipes.API.Entities.Amount", "IngredientId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+                });
+
+            modelBuilder.Entity("Recipes.API.Entities.Recipe", b =>
+                {
+                    b.OwnsOne("Recipes.API.Entities.Directions", "Directions", b1 =>
+                        {
+                            b1.Property<Guid>("RecipeId");
+
+                            b1.Property<string>("Step")
+                                .HasMaxLength(1000);
+
+                            b1.HasKey("RecipeId");
+
+                            b1.ToTable("Recipes");
+
+                            b1.HasOne("Recipes.API.Entities.Recipe")
+                                .WithOne("Directions")
+                                .HasForeignKey("Recipes.API.Entities.Directions", "RecipeId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });

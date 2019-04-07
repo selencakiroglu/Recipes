@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipes.API.Entities
 {
-    [Owned]
     public class Ingredient
     {
         [Key]
@@ -15,5 +15,10 @@ namespace Recipes.API.Entities
         public string Name { get; set; }
         
         public Amount Amount { get; set; }
+
+        [ForeignKey("RecipeId")]
+        public Recipe Recipe { get; set; }
+
+        public Guid RecipeId { get; set; }
     }
 }
