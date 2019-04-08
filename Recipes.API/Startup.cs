@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -58,6 +56,11 @@ namespace Recipes.API
                 cfg.CreateMap<Entities.Ingredient, Models.IngredientDto>();
                 cfg.CreateMap<Entities.Amount, Models.AmountDto>();
                 cfg.CreateMap<Entities.Directions, Models.DirectionsDto>();
+
+                cfg.CreateMap<Models.RecipeForCreationDto, Entities.Recipe>();
+                cfg.CreateMap<Models.IngredientDto, Entities.Ingredient>();
+                cfg.CreateMap<Models.AmountDto, Entities.Amount>();
+                cfg.CreateMap<Models.DirectionsDto, Entities.Directions>();
             });
 
             app.UseMvc();

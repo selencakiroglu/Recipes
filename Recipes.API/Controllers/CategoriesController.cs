@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Recipes.API.Models;
 using Recipes.API.Services;
-using System;
-using System.Collections.Generic;
 
 namespace Recipes.API.Controllers
 {

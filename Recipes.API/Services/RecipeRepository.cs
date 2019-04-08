@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Recipes.API.Entities;
 using Recipes.API.Helpers;
@@ -20,6 +19,11 @@ namespace Recipes.API.Services
         public IEnumerable<Category> GetCategories()
         {
             return _context.Categories.OrderBy(category => category.Name).ToList();
+        }
+
+        public Category GetCategory(String categoryName)
+        {
+            return _context.Categories.FirstOrDefault(category => category.Name.Trim().ToLowerInvariant() == categoryName.Trim().ToLowerInvariant());
         }
 
         public (int TotalRecipeCount, IEnumerable<Recipe> recipes) GetRecipes(RecipesResourceParameters recipesResourceParameters)
@@ -62,9 +66,15 @@ namespace Recipes.API.Services
             return (totalRecipeCount, recipes);
         }
 
-        public bool RecipeExist(Guid recipeId)
+        public void AddRecipe(Recipe recipe)
         {
-            return _context.Recipes.Any(r => r.RecipeId == recipeId);
+            recipe.RecipeId = Guid.NewGuid();
+            _context.Recipes.Add(recipe);
+        }
+
+        public bool RecipeExist(String recipeTitle)
+        {
+            return _context.Recipes.Any(recipe => recipe.Title.Trim().ToLowerInvariant() == recipeTitle.Trim().ToLowerInvariant());
         }
 
         public bool Save()
