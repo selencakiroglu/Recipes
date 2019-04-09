@@ -36,6 +36,11 @@ namespace Recipes.API.Services
 
             var totalRecipeCount = recipes.Count;
 
+            if(recipesResourceParameters == null)
+            {
+                return (totalRecipeCount, recipes);
+            }
+
             if (!string.IsNullOrEmpty(recipesResourceParameters.Category))
             {
                 var categoryForWhereClause = recipesResourceParameters.Category
